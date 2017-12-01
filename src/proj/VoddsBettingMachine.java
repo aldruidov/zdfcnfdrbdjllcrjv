@@ -22,37 +22,12 @@ import org.apache.logging.log4j.Logger;
  * @author User
  */
 public class VoddsBettingMachine {
-    private static final Logger logger = LogManager.getLogger(VoddsBettingMachine.class);
+    private static final Logger logger = LogManager.getLogger(VoddsBettingMachine.class.getName());
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-//        UnityAPI unityAPI = new UnityAPI();
-//
-//        String company = "<company>";
-//        String targettype = "<targettype>";
-//        String market = "<market>";
-//        String eventid = "<eventid>";
-//        String oddid = "<oddid>";
-//
-//        float targetodd = 0.0f;
-//        float gold = 0.0f;
-//        Boolean acceptbetterodd = false;
-//        Boolean autoStakeAdjustment = false;
-//        int homeScore = -1;
-//        int awayScore = -1;
-//
-//        String url = "http://biweb-unity-test.olesportsresearch.com";
-//        String username = "unity_group54";
-//        String password = "9amutV5Uks";
-//        String accessToken;
-//        String reqId;
-
-        // get user credit
-//        accessToken = unityAPI.getAccessToken(username, password);
-//        reqId = UUID.randomUUID().toString();
-//        unityAPI.getUserCredit(url, username, accessToken, reqId);
         
         Properties systemProps = System.getProperties();
         // setup key stores for secure connections
@@ -62,6 +37,7 @@ public class VoddsBettingMachine {
         systemProps.put("javax.net.ssl.keyStorePassword", "password");
         //setup the configuration file
         systemProps.put("deltaCrawlerSessionConfigurationFile", "conf/deltaCrawlerSession.json");        
+        systemProps.put("logback.configurationFile", "conf/logback.xml");
        
         DeltaCrawlerSession cs = new DeltaCrawlerSession();
         logger.debug("connecting...");
@@ -74,7 +50,7 @@ public class VoddsBettingMachine {
         cs.addDeltaEventHandler(dft);
 
         try {
-                Thread.sleep(5000);
+                Thread.sleep(15000);
         } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -83,64 +59,49 @@ public class VoddsBettingMachine {
         logger.debug("disconnecting and exit...");
         cs.disconnect();
         System.out.println("Exit");
-        System.exit(0);        
-                
-    /*while (true) {
-            // this call will block if the connection to the feed fails. 
-            // If auto reconnection is enabled, it will automatically reconnect to the feed for you
-            cs.waitConnection();
-            Collection<SoccerEvent> events = cs.getAllEvents();
+        System.exit(0);   
 
-            System.out.println("-------------------"+events.size()+" events------------------------------------------------------------------");
-            for (SoccerEvent e : events) {
-                    Collection<Record> rs = e.getRecords();	
+        // --------
+        String url = "http://biweb-unity-test.olesportsresearch.com";
+        String username = "unity_group54";
+        String password = "9amutV5Uks";
+        String accessToken;
+        String reqId;
+        
+        UnityAPI unityAPI = new UnityAPI();
 
-                    if (rs.size() == 0) continue;
+        // get user credit
+        accessToken = unityAPI.getAccessToken(username, password);
+        System.out.println("accessToken: " + accessToken);
+        //logger.debug("accessToken: %s", accessToken);
+        reqId = UUID.randomUUID().toString();
+        unityAPI.getUserCredit(url, username, accessToken, reqId); 
+        
+        String company = "SBO"; //  SoccerEventLiveState.source
+        String targettype = "over"; // ??
+        String market = "LIVE"; // Record.OddType - LIVE, TODAY, EARLY
+        String eventid = "b943e6c486201748"; //  Record.eventId
+        String oddid = "14342"; // Record.oddId
 
-                    System.out.println(String.format("Id %s \t-\t Host %s \t-\t Guest %s \t-\t League %s", e.getEventId(), e.getHost(), e.getGuest(), e.getLeague()));
-                    SoccerEventLiveState state = e.getLiveState();
-
-
-                    System.out.println(String.format("LiveState Information---- Starttime: %d, Source: %s, Duration: %d, Score %d-%d -", state.getStartTime(), state.getSource(), state.getDuration(), state.getHostPoint(), state.getGuestPoint()));
-                    System.out.println(state.getSegment());
-
-                    Map<String, String> oids = e.getAllOriginalEventIds();
-                    System.out.println("Original event ids");
-                    for (Entry<String, String> et : oids.entrySet()) {
-                            System.out.print(et.getKey()+" - "+et.getValue()+" ");
-                    }
-                    System.out.println();
-
-
-                    System.out.println("\n");
-            }
-
-
-            try {
-
-
-            } catch (Exception ex) {
-                    System.out.println("Exception");
-                    ex.printStackTrace();
-            }
-
-            try {
-                    Thread.sleep(5000);
-            } catch (Exception ex) {
-
-            }
-    }     */   
-
+        float targetodd = 1.2f;
+        float gold = 999999.0f;
+        Boolean acceptbetterodd = false;
+        Boolean autoStakeAdjustment = false;
+        int homeScore = -1;
+        int awayScore = -1;     
+        
         // get bet ticket
-//        accessToken = unityAPI.getAccessToken(username, password);
-//        reqId = UUID.randomUUID().toString();
-//        unityAPI.getBetTicket(url, username, accessToken, reqId, company, targettype, market, eventid, oddid);
+        reqId = UUID.randomUUID().toString();
+        unityAPI.getBetTicket(url, username, accessToken, reqId, company, targettype, market, eventid, oddid);        
+        
+        // place bet (be carefully, this is action place bet)
+        reqId = UUID.randomUUID().toString();
+        unityAPI.placeBet(url, username, accessToken, reqId, company, targettype, market, eventid, oddid, targetodd,
+                gold, acceptbetterodd, autoStakeAdjustment, homeScore, awayScore);        
+                   
+
 //
-//        // place bet (be carefully, this is action place bet)
-//        accessToken = unityAPI.getAccessToken(username, password);
-//        reqId = UUID.randomUUID().toString();
-//        unityAPI.placeBet(url, username, accessToken, reqId, company, targettype, market, eventid, oddid, targetodd,
-//                gold, acceptbetterodd, autoStakeAdjustment, homeScore, awayScore);
+
     }
     
 }
