@@ -1,0 +1,48 @@
+<configuration scan="true" scanPeriod="30 seconds" >
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d - [%level] - %logger{15} - %message%n%xException{5}</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="Application"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/application.log</file>
+		<encoder>
+			<pattern>%date - [%level] - %logger{1} in %thread - %message%xException%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+	
+	<appender name="feeds"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/feeds.log</file>
+		<encoder>
+			<pattern>%date - [%level] - %logger{1} in %thread - %message%xException%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>logs/feeds.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<logger name="org.apache" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	<root level="TRACE">
+		<appender-ref ref="Application" />
+	</root>
+		
+	<logger name="jayeson.app.wrapper.clientjava.ClientJavaMessageHandler" level="TRACE" additivity="false">
+		<appender-ref ref="feeds" />
+	</logger>
+	
+	<logger name="Crawler" level="ERROR" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+</configuration>

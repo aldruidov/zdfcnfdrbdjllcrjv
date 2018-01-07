@@ -1,0 +1,22 @@
+{
+  "subscriber" : {
+    "__c__" : "jayeson.lib.datafetcher.core.SubscriberConfiguration",
+    "username" : "9amutV5Uks_grp54",
+    "password" : "",
+    "connectionString" : "ssl://datafeed-01.olesportsresearch.com:61617?connectionTimeout=60000",
+    "dataChannels" : [ ],
+    "autoReconnect" : true,
+    "maxReconnectionCount" : 0,
+    "reconnectionInterval" : 5000
+
+  },
+  "recordConverter" : {
+    "bookFilter" : null,
+    "marketFilter" : null,
+    "autoClear" : false,
+    "fs3Username" : "unity_group54",
+    "fs3Password" : "9amutV5Uks",
+    "fs3List" :  [ {"host":"http://fs3.olesportsresearch.com","port": "9000"} ],
+    "callBackEnabled" : true
+  }
+}
