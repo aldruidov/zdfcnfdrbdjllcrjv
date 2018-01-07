@@ -62,45 +62,43 @@ public class VoddsBettingMachine {
         System.exit(0);   
 
         // --------
-        String url = "http://biweb-unity-test.olesportsresearch.com";
-        String username = "unity_group54";
-        String password = "9amutV5Uks";
-        String accessToken;
-        String reqId;
-        
-        UnityAPI unityAPI = new UnityAPI();
-
-        // get user credit
-        accessToken = unityAPI.getAccessToken(username, password);
-        System.out.println("accessToken: " + accessToken);
-        //logger.debug("accessToken: %s", accessToken);
-        reqId = UUID.randomUUID().toString();
-        unityAPI.getUserCredit(url, username, accessToken, reqId); 
-        
-        String company = "SBO"; //  SoccerEventLiveState.source
-        String targettype = "over"; // ??
-        String market = "LIVE"; // Record.OddType - LIVE, TODAY, EARLY
-        String eventid = "b943e6c486201748"; //  Record.eventId
-        String oddid = "14342"; // Record.oddId
-
-        float targetodd = 1.2f;
-        float gold = 999999.0f;
-        Boolean acceptbetterodd = false;
-        Boolean autoStakeAdjustment = false;
-        int homeScore = -1;
-        int awayScore = -1;     
-        
-        // get bet ticket
-        reqId = UUID.randomUUID().toString();
-        unityAPI.getBetTicket(url, username, accessToken, reqId, company, targettype, market, eventid, oddid);        
-        
-        // place bet (be carefully, this is action place bet)
-        reqId = UUID.randomUUID().toString();
-        unityAPI.placeBet(url, username, accessToken, reqId, company, targettype, market, eventid, oddid, targetodd,
-                gold, acceptbetterodd, autoStakeAdjustment, homeScore, awayScore);        
-                   
-
+//        String url = "http://biweb-unity-test.olesportsresearch.com";
+//        String username = "unity_group54";
+//        String password = "9amutV5Uks";
+//        String accessToken;
+//        String reqId;
+//        
+//        UnityAPI unityAPI = new UnityAPI();
 //
+//        // get user credit
+//        accessToken = unityAPI.getAccessToken(username, password);
+//        System.out.println("accessToken: " + accessToken);
+//        //logger.debug("accessToken: %s", accessToken);
+//        reqId = UUID.randomUUID().toString();
+//        unityAPI.getUserCredit(url, username, accessToken, reqId); 
+//        
+//        String company = "SBO"; //  SoccerEventLiveState.source
+//        String targettype = "over"; // ??
+//        String market = "LIVE"; // Record.OddType - LIVE, TODAY, EARLY
+//        String eventid = "b943e6c486201748"; //  Record.eventId
+//        String oddid = "14342"; // Record.oddId
+//
+//        float targetodd = 1.2f;
+//        float gold = 999999.0f;
+//        Boolean acceptbetterodd = false;
+//        Boolean autoStakeAdjustment = false;
+//        int homeScore = -1;
+//        int awayScore = -1;     
+//        
+//        // get bet ticket
+//        reqId = UUID.randomUUID().toString();
+//        unityAPI.getBetTicket(url, username, accessToken, reqId, company, targettype, market, eventid, oddid);        
+//        
+//        // place bet (be carefully, this is action place bet)
+//        reqId = UUID.randomUUID().toString();
+//        unityAPI.placeBet(url, username, accessToken, reqId, company, targettype, market, eventid, oddid, targetodd,
+//                gold, acceptbetterodd, autoStakeAdjustment, homeScore, awayScore);        
+//                   
 
     }
     

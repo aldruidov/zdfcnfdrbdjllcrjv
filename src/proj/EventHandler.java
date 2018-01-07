@@ -32,9 +32,9 @@ public class EventHandler implements DeltaEventHandler {
         System.out.println("Created Events:");
         for(SoccerEvent se: newEvents) {
             System.out.println(String.format("Id %s \t-\t Host %s \t-\t Guest %s \t-\t League %s", se.getEventId(), se.getHost(), se.getGuest(), se.getLeague()));
-            for (Record rec : se.getRecords()) {
-                System.out.println(String.format(" OddId: %d", rec.getOddId()));
-            }            
+//            for (Record rec : se.getRecords()) {
+//                System.out.println(String.format(" OddId: %d", rec.getOddId()));
+//            }            
         }
 
 
@@ -52,9 +52,9 @@ public class EventHandler implements DeltaEventHandler {
             Date d = new Date(state.getStartTime()*1000);
             System.out.println(String.format("LiveState -- Starttime %d (%s) Source %s - Duration %d - Score %d-%d,", state.getStartTime(),
                 dateFormat.format(d), state.getSource(), state.getDuration(), state.getHostPoint(), state.getGuestPoint() ) + " OddType: " + state.getMarketType());
-            for (Record rec : se.getRecords()) {
-                System.out.println(String.format(" OddId: %d", rec.getOddId()));
-            }
+//            for (Record rec : se.getRecords()) {
+//                System.out.println(String.format(" OddId: %d", rec.getOddId()));
+//            }
         }
 
     }
@@ -128,12 +128,40 @@ public class EventHandler implements DeltaEventHandler {
                                                r.getRateUnderUid() + " " + r.getRateUnder()+" "+
                                            r.getRateEqualUid() + " " + r.getRateEqual()+")");
              
-             String tt;
-             if (r.getPivotType() == PivotType.HDP) tt = "home";
-             else tt = "over";
-             BetTicket betTicket = bp.getBetTicket(r.getSource(), tt, r.getOddType().toString(), r.getEventId(), ""+r.getOddId());
+             String market = r.getOddType().toString(); // Market of the odd, same as the record you’re betting on.	live, today, early
+             String oddId = ""+r.getOddId();
+             String targetType; //The type of the odd, same as the record you’re betting on.	give, take, home, away, over, under, one, two, draw
+             if (r.getPivotType() == PivotType.HDP) targetType = "home";
+             else targetType = "over";
+             System.out.printf("bet tick: eid=%s, oddId=%s\n", r.getEventId(), oddId);
+             BetTicket betTicket = bp.getBetTicket(r.getSource(), targetType, r.getOddType().toString(), r.getEventId(), oddId);
              System.out.println(betTicket.toString());
-             
+                         
+             if (betTicket.getMinStake() <= 50) {               
+                double targetodd = betTicket.getCurrentOdd();
+                double gold = betTicket.getMinStake(); //bp.getBetGoldValue(betTicket.getMinStake(), betTicket.getMaxStake());
+                Boolean acceptbetterodd = true;
+                Boolean autoStakeAdjustment = false;
+                int homeScore = -1;
+                int awayScore = -1;       
+                
+                System.out.printf("prepare placing bet: eid=%s, oddId=%s\n", r.getEventId(), oddId);
+                
+             betTicket = bp.getBetTicket(r.getSource(), targetType, r.getOddType().toString(), r.getEventId(), oddId);
+             System.out.println(betTicket.toString());                
+                
+                
+                
+//    public PlaceBetResult placeBet(String company, String targettype,
+//                            String market, String eventid, String oddid, double targetodd, double gold, Boolean acceptbetterodd,
+//                            Boolean autoStakeAdjustment, int homeScore, int awayScore) {                
+         
+                 PlaceBetResult placeBetResult = bp.placeBet(r.getSource(), targetType, 
+                         market, r.getEventId(), oddId, targetodd, gold, 
+                         acceptbetterodd, autoStakeAdjustment, homeScore, awayScore );
+                 System.out.println(placeBetResult.toString());
+                 System.exit(0);
+             }
             }
         }
 
